@@ -1,1 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clover Labs - Secure Terminal v2.5</title>
+    <style>
+        body {
+            margin: 0; padding: 15px; height: 100vh; box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif; overflow: hidden;
+            background: #19528d;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(135, 237, 107, 0.45) 0%, transparent 45%),
+                radial-gradient(circle at 90% 10%, rgba(255, 255, 255, 0.3) 0%, transparent 35%),
+                linear-gradient(145deg, #3fa1ec 0%, #155594 40%, #0c335c 70%, #135c24 100%);
+            display: flex; justify-content: center; align-items: center; position: relative;
+        }
+        body::before {
+            content: ""; position: absolute; top: 0; left: 0; right: 0; height: 45%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1); pointer-events: none; z-index: -1;
+        }
+        .aero-window {
+            width: 500px; background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(10px) saturate(140%); -webkit-backdrop-filter: blur(10px) saturate(140%);
+            border: 1px solid rgba(255, 255, 255, 0.5); border-top: 1.5px solid rgba(255, 255, 255, 0.7);
+            border-radius: 8px; box-shadow: 0 15px 45px rgba(0, 20, 50, 0.4);
+            overflow: hidden; box-sizing: border-box; z-index: 10; position: relative;
+        }
+        .window-header {
+            background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 50%, rgba(0,0,0,0.1) 50.1%, rgba(0,0,0,0.05) 100%);
+            padding: 12px 16px; color: rgba(255, 255, 255, 0.95); font-size: 13px; font-weight: 600;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0, 0, 0, 0.2); user-select: none;
+        }
+        .window-controls span { width: 26px; height: 18px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 3px; display: inline-block;}
+        .window-body { background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(240,247,255,0.98) 100%); }
+        .login-padding { padding: 30px; }
+        .logo-container { text-align: center; margin-bottom: 25px; }
+        .logo-text { font-size: 28px; font-weight: 800; color: #17522b; margin: 0; text-shadow: 0 1px 0 #fff; }
+        .logo-text span { color: #2383cf; font-weight: 400; }
+        .tagline { font-size: 11px; color: #597d9a; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+        .field-group { margin-bottom: 18px; position: relative; }
+        .field-group label { display: block; font-size: 11px; font-weight: bold; color: #315377; margin-bottom: 6px; }
+        .field-group input {
+            width: 100%; padding: 9px 12px; border: 1px solid #a3bccc; border-radius: 4px; box-sizing: border-box;
+            background: linear-gradient(180deg, #f9fbfd 0%, #ffffff 100%); font-size: 14px; color: #1d354d; outline: none; position: relative; z-index: 30;
+        }
+        .btn-aero-capsule {
+            width: 100%; padding: 11px; font-size: 14px; font-weight: bold; color: white; border: 1px solid #1f5731; border-radius: 25px; cursor: pointer;
+            background: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 50%), linear-gradient(180deg, #4ce078 0%, #24a14a 49%, #0f8233 50%, #0a5c23 100%);
+            box-shadow: 0 4px 10px rgba(0,30,10,0.25), inset 0 1px 0 rgba(255,255,255,0.4); text-shadow: 0 -1px 1px rgba(0,0,0,0.4); position: relative; z-index: 30;
+        }
+        .feedback-msg { margin-top: 15px; font-size: 12px; text-align: center; min-height: 18px; font-weight: 600; }
+        .err { color: #be1e1e; } .ok { color: #177a2f; }
+        .arg-node { position: absolute; bottom: 12px; left: 15px; font-size: 11px; color: rgba(255,255,255,0.03); user-select: none; cursor: pointer; z-index: 40; }
+        .arg-node:hover { color: rgba(255,255,255,0.6); }
+        .browser-layout { width: 100%; height: 85vh; display: flex; flex-direction: column; }
+        .tabs-bar { background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.05) 100%); display: flex; align-items: flex-end; padding: 8px 10px 0 10px; gap: 4px; border-bottom: 1px solid rgba(0, 0, 0, 0.15); user-select: none; }
+        .tab { background: linear-gradient(180deg, rgba(240,245,250,0.7) 0%, rgba(215,225,235,0.7) 100%); border: 1px solid rgba(0,0,0,0.2); border-bottom: none; padding: 6px 15px; font-size: 12px; color: #2c4054; border-radius: 5px 5px 0 0; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+        .tab.active { background: linear-gradient(180deg, #ffffff 0%, #f4f8fb 100%); color: #0b3a1a; font-weight: 600; border-color: rgba(0,0,0,0.25); position: relative; z-index: 2; margin-bottom: -1px; padding-bottom: 7px; }
+        .close-tab-btn { font-size: 10px; font-weight: bold; color: #8899aa; padding: 1px 4px; border-radius: 2px; }
+        .close-tab-btn:hover { background-color: #e81123; color: white; }
+        .navigation-bar { background: linear-gradient(180deg, #f4f8fb 0%, #e4eff7 100%); padding: 6px 12px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #b2c8db; }
+        .nav-btn { width: 24px; height: 24px; border-radius: 50%; border: 1px solid #9bb7d4; background: linear-gradient(180deg, #ffffff 0%, #e6eff7 100%); color: #55708c; display: flex; justify-content: center; align-items: center; }
+        .url-bar { flex: 1; padding: 5px 10px; border: 1px solid #a3bccc; border-radius: 4px; background: white; font-size: 13px; color: #3b5975; display: flex; align-items: center; gap: 6px; }
+        .url-secure-icon { color: #27ae60; font-size: 11px; font-weight: bold; }
+        .page-content { flex: 1; background: white; padding: 30px; overflow-y: auto; color: #203525; line-height: 1.6; }
+        .doc-title { color: #114d24; border-bottom: 2px solid #3fa1ec; padding-bottom: 6px; margin-top: 0; font-size: 24px; }
+        .meta-info { font-size: 12px; color: #667788; margin-bottom: 20px; background: #f4f8fb; padding: 8px 12px; border-radius: 4px; border: 1px solid #e1ebf2; }
+        .censored { background: #222; color: #222; padding: 0 4px; border-radius: 2px; cursor: help; transition: all 0.2s; user-select: none; }
+        .censored:hover { background: #c0392b; color: white; user-select: auto; }
+    </style>
+</head>
+<body>
+
+    <div class="aero-window" id="mainContainer">
+        <div class="window-header">
+            <span id="windowTitle">CloverLabs_Intranet_Gate_v2.0</span>
+            <div class="window-controls">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        
+        <div class="window-body login-padding" id="viewContent">
+            <div class="logo-container">
+                <h1 class="logo-text">☘️ Clover<span>Labs</span></h1>
+                <div class="tagline">Ecología Avanzada y Bioseguridad Global</div>
+            </div>
+            <form onsubmit="handlePortalLogin(event)">
+                <div class="field-group">
+                    <label for="scientistId">ID del Investigador:</label>
+                    <input type="text" id="scientistId" placeholder="usuario@cloverlabs.com" required autocomplete="off">
+                </div>
+                <div class="field-group">
+                    <label for="secureKey">Llave de Criptografía (Password):</label>
+                    <input type="password" id="secureKey" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-aero-capsule">Acceder a la Base de Datos</button>
+            </form>
+            <div id="feedback" class="feedback-msg"></div>
+        </div>
+    </div>
+
+    <div class="arg-node" onclick="alert('NODO REVELADO\nID del Investigador: researcher_04\nLlave de Criptografía: eco_crisis_2006')">■ [DEBUG_LOG_04]</div>
+
+    <script>
+        const documentDatabase = {
+            inicio: { title: "Portal de Archivos", url: "https://cloverlabs.com" },
+            agua: { title: "Reporte_Agua_v1.06", url: "https://cloverlabs.com" },
+            sujeto: { title: "Sujeto_Prueba_09", url: "https://cloverlabs.com" }
+        };
+
+        function getDocumentHTML(tabKey) {
+            if (tabKey === 'inicio') {
+                return '<h2 class="doc-title">☘️ Servidor Central de Investigación</h2>' +
+                       '<div class="meta-info">Terminal Autorizada // Nivel de Acceso 4</div>' +
+                       '<p>Has ingresado al nodo de almacenamiento restringido de <strong>Clover Labs</strong>.</p>' +
+                       '<p>Haz clic abajo para abrir una <strong>nueva pestaña</strong>:</p>' +
+                       '<button onclick="openTab(\'agua\')" style="padding: 10px 14px; background: #eef7ff; border: 1px solid #a3c8e8; border-radius: 4px; cursor: pointer; font-weight: bold; margin-right: 10px;">📄 Reporte_Agua_v1.06</button>' +
+                       '<button onclick="openTab(\'sujeto\')" style="padding: 10px 14px; background: #f0fdf4; border: 1px solid #a3e2b1; border-radius: 4px; cursor: pointer; font-weight: bold;">📄 Sujeto_Prueba_09</button>';
+            }
+            if (tabKey === 'agua') {
+                return '<h2 class="doc-title">Informe de Anomalía Bio-Acuática</h2>' +
+                       '<div class="meta-info">Dr. E. Green // Proyecto: Clover-Pure</div>' +
 
