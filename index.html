@@ -6,50 +6,77 @@
     <title>Clover Labs - Operating System Portal</title>
     <style>
         /* ==========================================================================
-           1. ESCRITORIO WINDOWS AERO VISTA / 7
+           1. EL VERDADERO FONDO FRUTIGER AERO DE ALTA FIDELIDAD
            ========================================================================== */
         body {
             margin: 0; padding: 0; height: 100vh; box-sizing: border-box;
             font-family: 'Segoe UI', Arial, sans-serif; overflow: hidden;
-            background: #154577;
-            background-image: 
-                radial-gradient(circle at 80% 20%, rgba(0, 220, 100, 0.35) 0%, transparent 45%),
-                radial-gradient(circle at 15% 75%, rgba(43, 147, 232, 0.4) 0%, transparent 50%),
-                linear-gradient(135deg, #1d6ca7 0%, #103860 50%, #08213b 100%);
             display: flex; justify-content: center; align-items: center; position: relative;
+            
+            /* Paleta icónica 2006: Azul océano profundo a verde naturaleza hiper-saturada */
+            background: #103c6f;
+            background-image: 
+                radial-gradient(circle at 80% 20%, #46e089 0%, transparent 55%),
+                radial-gradient(circle at 20% 80%, #29abe2 0%, transparent 60%),
+                linear-gradient(135deg, #1d72b8 0%, #0d2c54 60%, #06183a 100%);
         }
 
-        .taskbar {
-            position: absolute; bottom: 0; left: 0; right: 0; height: 40px;
-            background: rgba(0, 10, 30, 0.45); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border-top: 1px solid rgba(255,255,255,0.2); z-index: 100; display: flex; align-items: center; padding: 0 10px;
+        /* Ondas y destellos de luz curvos realistas de la era Windows Vista */
+        body::before {
+            content: ""; position: absolute; top: -10%; left: -20%; width: 140%; height: 60%;
+            background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 70%);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+            transform: rotate(-5deg); pointer-events: none; z-index: 1;
         }
-        .start-button {
-            width: 32px; height: 32px; border-radius: 50%;
-            background: radial-gradient(circle at center, #3fa1ec 0%, #155594 70%, #0c335c 100%);
-            box-shadow: 0 0 8px rgba(63,161,236,0.8), inset 0 1px 2px rgba(255,255,255,0.6);
-            cursor: pointer; border: 1px solid rgba(255,255,255,0.3);
+
+        body::after {
+            content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 35%;
+            background: linear-gradient(0deg, rgba(70, 224, 137, 0.15) 0%, rgba(255,255,255,0) 100%);
+            pointer-events: none; z-index: 1;
+        }
+
+        /* Sistema de Burbujas de Agua flotando de verdad en el fondo */
+        .bubble-generator {
+            position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 2;
+        }
+        .water-bubble {
+            position: absolute; bottom: -50px; background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 50%;
+            box-shadow: inset 1px 1px 3px rgba(255,255,255,0.6), inset -2px -2px 5px rgba(0,0,0,0.1), 0 4px 10px rgba(0,30,60,0.15);
+            animation: floatUp 8s infinite linear;
+        }
+        /* Brillo interno glossy para cada burbuja líquida */
+        .water-bubble::after {
+            content: ""; position: absolute; top: 15%; left: 20%; width: 30%; height: 15%;
+            background: rgba(255,255,255,0.5); border-radius: 50%;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0) translateX(0) scale(0.8); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-110vh) translateX(30px) scale(1.1); opacity: 0; }
         }
 
         /* ==========================================================================
-           2. INTERFAZ DE VENTANA FIDELIDAD WINDOWS AERO (Bordes fijos perfectos)
+           2. INTERFAZ DE VENTANA FIDELIDAD WINDOWS AERO (Bordes de cristal grueso)
            ========================================================================== */
         .aero-window {
-            width: 460px; height: 440px; /* Tamaño total óptimo calculado */
+            width: 460px; height: 440px;
             background: rgba(255, 255, 255, 0.22);
-            backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);
-            border: 4px solid rgba(255, 255, 255, 0.35);
-            border-radius: 8px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255,255,255,0.5);
+            backdrop-filter: blur(25px) saturate(170%); -webkit-backdrop-filter: blur(25px) saturate(170%);
+            border: 4px solid rgba(255, 255, 255, 0.4);
+            border-top: 4px solid rgba(255, 255, 255, 0.55);
+            border-radius: 8px; box-shadow: 0 25px 65px rgba(0, 15, 40, 0.5), inset 0 1px 0 rgba(255,255,255,0.5);
             overflow: hidden; box-sizing: border-box; z-index: 10; position: relative; display: flex; flex-direction: column;
         }
 
         .window-header {
-            background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 50%, rgba(0,0,0,0.08) 50.1%, rgba(0,0,0,0.03) 100%);
-            padding: 10px 14px; color: white; font-size: 12px; font-weight: normal; height: 40px; box-sizing: border-box;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0, 0, 0, 0.2); user-select: none;
+            background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.08) 50%, rgba(0,0,0,0.06) 50.1%, rgba(0,0,0,0.02) 100%);
+            padding: 10px 14px; color: white; font-size: 12px; font-weight: 600; height: 40px; box-sizing: border-box;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0, 0, 0, 0.15); user-select: none;
         }
 
-        .window-controls { display: flex; gap: 3px; }
+        .window-controls { display: flex; gap: 4px; }
         .window-controls span {
             width: 28px; height: 16px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: 2px; cursor: pointer; position: relative;
         }
@@ -59,23 +86,20 @@
         .window-controls .min-btn::after { bottom: 4px; }
         .window-controls .max-btn::after { top: 4px; height: 7px; width: 10px; border: 1px solid rgba(255,255,255,0.8); background: transparent; left: 8px; }
         .window-controls .close-btn {
-            background: linear-gradient(180deg, rgba(235, 90, 90, 0.4) 0%, rgba(180, 40, 40, 0.4) 100%); border-color: rgba(255,100,100,0.3);
+            background: linear-gradient(180deg, rgba(235, 90, 90, 0.5) 0%, rgba(180, 40, 40, 0.5) 100%); border-color: rgba(255,100,100,0.4);
         }
         .window-controls .close-btn:hover {
             background: linear-gradient(180deg, #ff5c5c 0%, #cc1122 100%); border-color: #990000; box-shadow: 0 0 8px rgba(255,0,0,0.6);
         }
 
-        .window-body { background: #ffffff; flex: 1; padding: 20px 30px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; }
+        .window-body { background: linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(243,248,252,0.98) 100%); flex: 1; padding: 22px 30px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; }
 
         /* ==========================================================================
            3. EL TRÉBOL DE 4 HOJAS ANIMADO (Ciclo de regeneración de hojas)
            ========================================================================== */
-        .logo-container { display: flex; flex-direction: column; align-items: center; margin-bottom: 15px; }
+        .logo-container { display: flex; flex-direction: column; align-items: center; margin-bottom: 10px; }
         
-        .clover-container {
-            position: relative; width: 80px; height: 75px; margin-bottom: 5px;
-        }
-
+        .clover-container { position: relative; width: 80px; height: 72px; margin-bottom: 3px; }
         .clover-stem {
             position: absolute; width: 4px; height: 22px; background: #1b733b;
             bottom: 2px; left: 38px; border-radius: 0 0 4px 4px; transform: rotate(10deg); z-index: 1;
@@ -108,37 +132,27 @@
         }
 
         /* ==========================================================================
-           4. FORMULARIO E INPUTS (Compresión de Márgenes)
+           4. FORMULARIO E INPUTS (Compresión de Márgenes y Estilo)
            ========================================================================== */
-        .logo-text { font-size: 26px; font-weight: bold; color: #144e28; margin: 0; letter-spacing: -0.5px; }
+        .logo-text { font-size: 26px; font-weight: bold; color: #144e28; margin: 0; letter-spacing: -0.5px; text-shadow: 0 1px 0 #fff; }
         .logo-text span { color: #247cb8; font-weight: normal; }
         .tagline { font-size: 11px; color: #617b94; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
 
-        .field-group { margin-bottom: 14px; text-align: left; }
+        .field-group { margin-bottom: 12px; text-align: left; }
         .field-group label { display: block; font-size: 11px; font-weight: bold; color: #34495e; margin-bottom: 4px; }
         .field-group input {
-            width: 100%; padding: 8px 10px; border: 1px solid #a5bfc0; border-radius: 4px; box-sizing: border-box;
+            width: 100%; padding: 9px 12px; border: 1px solid #a5bfc0; border-radius: 4px; box-sizing: border-box;
             background: linear-gradient(180deg, #f7fafb 0%, #ffffff 100%); font-size: 13px; color: #2c3e50; outline: none;
+            position: relative; z-index: 30;
         }
         .field-group input:focus { border-color: #3fa1ec; box-shadow: 0 0 5px rgba(63,161,236,0.6); }
 
         .btn-aero-capsule {
-            width: 100%; padding: 10px; font-size: 13px; font-weight: bold; color: white; border: 1px solid #194d27; border-radius: 20px; cursor: pointer;
+            width: 100%; padding: 11px; font-size: 13px; font-weight: bold; color: white; border: 1px solid #194d27; border-radius: 20px; cursor: pointer;
             background: linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 50%), linear-gradient(180deg, #4ce078 0%, #24a14a 49%, #0f8233 50%, #0a5c23 100%);
             box-shadow: 0 3px 6px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.4); text-shadow: 0 -1px 1px rgba(0,0,0,0.3);
+            position: relative; z-index: 30;
         }
         .btn-aero-capsule:hover { filter: brightness(1.06); }
 
-        .feedback-msg { margin-top: 5px; font-size: 12px; text-align: center; min-height: 16px; font-weight: 600; }
-        .err { color: #c0392b; } .ok { color: #27ae60; }
-        .arg-node { position: absolute; bottom: 52px; left: 15px; font-size: 11px; color: rgba(255,255,255,0.03); user-select: none; cursor: pointer; z-index: 40; }
-        .arg-node:hover { color: rgba(255,255,255,0.5); }
-
-        /* ==========================================================================
-           5. INTERFAZ FASE 2: BROWSER DE PESTAÑAS (TABS AUTOMÁTICAS)
-           ========================================================================== */
-        .browser-layout { width: 100%; height: 100%; display: flex; flex-direction: column; background: #ffffff; }
-        .tabs-bar { background: linear-gradient(180deg, rgba(0,0,0,0.03) 0%, rgba(0,0,0,0.08) 100%); display: flex; align-items: flex-end; padding: 6px 10px 0 10px; gap: 3px; border-bottom: 1px solid rgba(0, 0, 0, 0.15); user-select: none; height: 35px; box-sizing: border-box; }
-        .tab { background: linear-gradient(180deg, rgba(240,245,250,0.7) 0%, rgba(215,225,235,0.7) 100%); border: 1px solid rgba(0,0,0,0.2); border-bottom: none; padding: 4px 12px; font-size: 11px; color: #34495e; border-radius: 4px 4px 0 0; cursor: pointer; display: flex; align-items: center; gap: 8px; }
-        .tab.active { background: #ffffff; color: #144e28; font-weight: 600; border-color: rgba(0,0,0,0.2); position: relative; z-index: 2; margin-bottom: -1px; padding-bottom: 5px; }
-r:</label>
+        .feedback-msg { margin-top: 4px; font-size: 12px; text-align: center; min-height: 16px; font-weight: 600; }
