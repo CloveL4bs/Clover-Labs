@@ -25,7 +25,7 @@
             backdrop-filter: blur(10px) saturate(140%); -webkit-backdrop-filter: blur(10px) saturate(140%);
             border: 1px solid rgba(255, 255, 255, 0.5); border-top: 1.5px solid rgba(255, 255, 255, 0.7);
             border-radius: 8px; box-shadow: 0 15px 45px rgba(0, 20, 50, 0.4);
-            overflow: hidden; box-sizing: border-box; z-index: 10; position: relative;
+            overflow: hidden; box-sizing: border-box; z-index: 10; position: relative; transition: all 0.3s ease;
         }
         .window-header {
             background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 50%, rgba(0,0,0,0.1) 50.1%, rgba(0,0,0,0.05) 100%);
@@ -35,7 +35,37 @@
         .window-controls span { width: 26px; height: 18px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 3px; display: inline-block;}
         .window-body { background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(240,247,255,0.98) 100%); }
         .login-padding { padding: 30px; }
-        .logo-container { text-align: center; margin-bottom: 25px; }
+        
+        /* Contenedor del Logo con Trébol 3D de 4 Hojas */
+        .logo-container { display: flex; flex-direction: column; align-items: center; margin-bottom: 25px; }
+        
+        .clover-3d {
+            position: relative; width: 60px; height: 60px; margin-bottom: 10px;
+            filter: drop-shadow(0 4px 8px rgba(0,40,10,0.25));
+        }
+        /* Construcción geométrica de las 4 hojas de cristal líquido */
+        .leaf {
+            position: absolute; width: 26px; height: 26px;
+            background: linear-gradient(135deg, #a3f7b5 0%, #2ecc71 40%, #27ae60 100%);
+            border-radius: 50% 50% 50% 0; box-shadow: inset -1px -1px 3px rgba(0,0,0,0.2), inset 1px 1px 4px rgba(255,255,255,0.6);
+        }
+        /* Rotación exacta para formar las 4 hojas */
+        .l1 { top: 4px; left: 17px; transform: rotate(-45deg); }
+        .l2 { top: 17px; left: 30px; transform: rotate(45deg); }
+        .l3 { top: 30px; left: 17px; transform: rotate(135deg); }
+        .l4 { top: 17px; left: 4px; transform: rotate(225deg); }
+        /* Tallo del trébol */
+        .stem {
+            position: absolute; width: 4px; height: 18px; background: #1e7e43;
+            bottom: -4px; left: 28px; border-radius: 0 0 4px 4px; transform: rotate(15deg); z-index: -1;
+        }
+        /* Reflejo de brillo glossy de los años 2000 encima del trébol */
+        .clover-3d::after {
+            content: ""; position: absolute; top: 6px; left: 12px; width: 36px; height: 16px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 100%);
+            border-radius: 18px / 8px; pointer-events: none;
+        }
+
         .logo-text { font-size: 28px; font-weight: 800; color: #17522b; margin: 0; text-shadow: 0 1px 0 #fff; }
         .logo-text span { color: #2383cf; font-weight: 400; }
         .tagline { font-size: 11px; color: #597d9a; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
@@ -69,6 +99,14 @@
         .meta-info { font-size: 12px; color: #667788; margin-bottom: 20px; background: #f4f8fb; padding: 8px 12px; border-radius: 4px; border: 1px solid #e1ebf2; }
         .censored { background: #222; color: #222; padding: 0 4px; border-radius: 2px; cursor: help; transition: all 0.2s; user-select: none; }
         .censored:hover { background: #c0392b; color: white; user-select: auto; }
+        
+        .wmp-player {
+            background: linear-gradient(180deg, #333 0%, #111 100%);
+            border: 2px solid #555; border-radius: 6px; padding: 15px;
+            color: #5cd682; font-family: monospace; max-width: 400px; margin: 20px 0;
+            box-shadow: inset 0 1px 3px rgba(255,255,255,0.2);
+        }
+        .wmp-display { background: black; border: 1px solid #444; height: 40px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -83,43 +121,17 @@
         
         <div class="window-body login-padding" id="viewContent">
             <div class="logo-container">
-                <h1 class="logo-text">☘️ Clover<span>Labs</span></h1>
+                <!-- Logotipo Frutiger Aero Vectorial de 4 Hojas -->
+                <div class="clover-3d">
+                    <div class="leaf l1"></div>
+                    <div class="leaf l2"></div>
+                    <div class="leaf l3"></div>
+                    <div class="leaf l4"></div>
+                    <div class="stem"></div>
+                </div>
+                <h1 class="logo-text">Clover<span>Labs</span></h1>
                 <div class="tagline">Ecología Avanzada y Bioseguridad Global</div>
             </div>
             <form onsubmit="handlePortalLogin(event)">
                 <div class="field-group">
                     <label for="scientistId">ID del Investigador:</label>
-                    <input type="text" id="scientistId" placeholder="usuario@cloverlabs.com" required autocomplete="off">
-                </div>
-                <div class="field-group">
-                    <label for="secureKey">Llave de Criptografía (Password):</label>
-                    <input type="password" id="secureKey" placeholder="••••••••" required>
-                </div>
-                <button type="submit" class="btn-aero-capsule">Acceder a la Base de Datos</button>
-            </form>
-            <div id="feedback" class="feedback-msg"></div>
-        </div>
-    </div>
-
-    <div class="arg-node" onclick="alert('NODO REVELADO\nID del Investigador: researcher_04\nLlave de Criptografía: eco_crisis_2006')">■ [DEBUG_LOG_04]</div>
-
-    <script>
-        const documentDatabase = {
-            inicio: { title: "Portal de Archivos", url: "https://cloverlabs.com" },
-            agua: { title: "Reporte_Agua_v1.06", url: "https://cloverlabs.com" },
-            sujeto: { title: "Sujeto_Prueba_09", url: "https://cloverlabs.com" }
-        };
-
-        function getDocumentHTML(tabKey) {
-            if (tabKey === 'inicio') {
-                return '<h2 class="doc-title">☘️ Servidor Central de Investigación</h2>' +
-                       '<div class="meta-info">Terminal Autorizada // Nivel de Acceso 4</div>' +
-                       '<p>Has ingresado al nodo de almacenamiento restringido de <strong>Clover Labs</strong>.</p>' +
-                       '<p>Haz clic abajo para abrir una <strong>nueva pestaña</strong>:</p>' +
-                       '<button onclick="openTab(\'agua\')" style="padding: 10px 14px; background: #eef7ff; border: 1px solid #a3c8e8; border-radius: 4px; cursor: pointer; font-weight: bold; margin-right: 10px;">📄 Reporte_Agua_v1.06</button>' +
-                       '<button onclick="openTab(\'sujeto\')" style="padding: 10px 14px; background: #f0fdf4; border: 1px solid #a3e2b1; border-radius: 4px; cursor: pointer; font-weight: bold;">📄 Sujeto_Prueba_09</button>';
-            }
-            if (tabKey === 'agua') {
-                return '<h2 class="doc-title">Informe de Anomalía Bio-Acuática</h2>' +
-                       '<div class="meta-info">Dr. E. Green // Proyecto: Clover-Pure</div>' +
-
