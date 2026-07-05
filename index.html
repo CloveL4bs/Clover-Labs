@@ -3,135 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clover Labs - Secure Terminal v2.5</title>
+    <title>Clover Labs - Operating System Portal</title>
     <style>
+        /* ==========================================================================
+           1. ESCRITORIO WINDOWS AERO VISTA / 7
+           ========================================================================== */
         body {
-            margin: 0; padding: 15px; height: 100vh; box-sizing: border-box;
+            margin: 0; padding: 0; height: 100vh; box-sizing: border-box;
             font-family: 'Segoe UI', Arial, sans-serif; overflow: hidden;
-            background: #19528d;
+            background: #154577;
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(135, 237, 107, 0.45) 0%, transparent 45%),
-                radial-gradient(circle at 90% 10%, rgba(255, 255, 255, 0.3) 0%, transparent 35%),
-                linear-gradient(145deg, #3fa1ec 0%, #155594 40%, #0c335c 70%, #135c24 100%);
+                radial-gradient(circle at 80% 20%, rgba(0, 220, 100, 0.35) 0%, transparent 45%),
+                radial-gradient(circle at 15% 75%, rgba(43, 147, 232, 0.4) 0%, transparent 50%),
+                linear-gradient(135deg, #1d6ca7 0%, #103860 50%, #08213b 100%);
             display: flex; justify-content: center; align-items: center; position: relative;
         }
-        body::before {
-            content: ""; position: absolute; top: 0; left: 0; right: 0; height: 45%;
-            background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 100%);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1); pointer-events: none; z-index: -1;
+
+        .taskbar {
+            position: absolute; bottom: 0; left: 0; right: 0; height: 40px;
+            background: rgba(0, 10, 30, 0.45); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border-top: 1px solid rgba(255,255,255,0.2); z-index: 100; display: flex; align-items: center; padding: 0 10px;
         }
+        .start-button {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: radial-gradient(circle at center, #3fa1ec 0%, #155594 70%, #0c335c 100%);
+            box-shadow: 0 0 8px rgba(63,161,236,0.8), inset 0 1px 2px rgba(255,255,255,0.6);
+            cursor: pointer; border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        /* ==========================================================================
+           2. INTERFAZ DE VENTANA FIDELIDAD WINDOWS AERO (Bordes fijos perfectos)
+           ========================================================================== */
         .aero-window {
-            width: 500px; background: rgba(255, 255, 255, 0.35);
-            backdrop-filter: blur(10px) saturate(140%); -webkit-backdrop-filter: blur(10px) saturate(140%);
-            border: 1px solid rgba(255, 255, 255, 0.5); border-top: 1.5px solid rgba(255, 255, 255, 0.7);
-            border-radius: 8px; box-shadow: 0 15px 45px rgba(0, 20, 50, 0.4);
-            overflow: hidden; box-sizing: border-box; z-index: 10; position: relative; transition: all 0.3s ease;
+            width: 460px; height: 440px; /* Tamaño total óptimo calculado */
+            background: rgba(255, 255, 255, 0.22);
+            backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);
+            border: 4px solid rgba(255, 255, 255, 0.35);
+            border-radius: 8px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255,255,255,0.5);
+            overflow: hidden; box-sizing: border-box; z-index: 10; position: relative; display: flex; flex-direction: column;
         }
+
         .window-header {
-            background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 50%, rgba(0,0,0,0.1) 50.1%, rgba(0,0,0,0.05) 100%);
-            padding: 12px 16px; color: rgba(255, 255, 255, 0.95); font-size: 13px; font-weight: 600;
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0, 0, 0, 0.2); user-select: none;
-        }
-        .window-controls span { width: 26px; height: 18px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 3px; display: inline-block;}
-        .window-body { background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(240,247,255,0.98) 100%); }
-        .login-padding { padding: 30px; }
-        
-        /* Contenedor del Logo con Trébol 3D de 4 Hojas */
-        .logo-container { display: flex; flex-direction: column; align-items: center; margin-bottom: 25px; }
-        
-        .clover-3d {
-            position: relative; width: 60px; height: 60px; margin-bottom: 10px;
-            filter: drop-shadow(0 4px 8px rgba(0,40,10,0.25));
-        }
-        /* Construcción geométrica de las 4 hojas de cristal líquido */
-        .leaf {
-            position: absolute; width: 26px; height: 26px;
-            background: linear-gradient(135deg, #a3f7b5 0%, #2ecc71 40%, #27ae60 100%);
-            border-radius: 50% 50% 50% 0; box-shadow: inset -1px -1px 3px rgba(0,0,0,0.2), inset 1px 1px 4px rgba(255,255,255,0.6);
-        }
-        /* Rotación exacta para formar las 4 hojas */
-        .l1 { top: 4px; left: 17px; transform: rotate(-45deg); }
-        .l2 { top: 17px; left: 30px; transform: rotate(45deg); }
-        .l3 { top: 30px; left: 17px; transform: rotate(135deg); }
-        .l4 { top: 17px; left: 4px; transform: rotate(225deg); }
-        /* Tallo del trébol */
-        .stem {
-            position: absolute; width: 4px; height: 18px; background: #1e7e43;
-            bottom: -4px; left: 28px; border-radius: 0 0 4px 4px; transform: rotate(15deg); z-index: -1;
-        }
-        /* Reflejo de brillo glossy de los años 2000 encima del trébol */
-        .clover-3d::after {
-            content: ""; position: absolute; top: 6px; left: 12px; width: 36px; height: 16px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 100%);
-            border-radius: 18px / 8px; pointer-events: none;
+            background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 50%, rgba(0,0,0,0.08) 50.1%, rgba(0,0,0,0.03) 100%);
+            padding: 10px 14px; color: white; font-size: 12px; font-weight: normal; height: 40px; box-sizing: border-box;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0, 0, 0, 0.2); user-select: none;
         }
 
-        .logo-text { font-size: 28px; font-weight: 800; color: #17522b; margin: 0; text-shadow: 0 1px 0 #fff; }
-        .logo-text span { color: #2383cf; font-weight: 400; }
-        .tagline { font-size: 11px; color: #597d9a; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
-        .field-group { margin-bottom: 18px; position: relative; }
-        .field-group label { display: block; font-size: 11px; font-weight: bold; color: #315377; margin-bottom: 6px; }
+        .window-controls { display: flex; gap: 3px; }
+        .window-controls span {
+            width: 28px; height: 16px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: 2px; cursor: pointer; position: relative;
+        }
+        .window-controls span::after {
+            content: ""; position: absolute; left: 8px; width: 12px; height: 2px; background: rgba(255,255,255,0.8);
+        }
+        .window-controls .min-btn::after { bottom: 4px; }
+        .window-controls .max-btn::after { top: 4px; height: 7px; width: 10px; border: 1px solid rgba(255,255,255,0.8); background: transparent; left: 8px; }
+        .window-controls .close-btn {
+            background: linear-gradient(180deg, rgba(235, 90, 90, 0.4) 0%, rgba(180, 40, 40, 0.4) 100%); border-color: rgba(255,100,100,0.3);
+        }
+        .window-controls .close-btn:hover {
+            background: linear-gradient(180deg, #ff5c5c 0%, #cc1122 100%); border-color: #990000; box-shadow: 0 0 8px rgba(255,0,0,0.6);
+        }
+
+        .window-body { background: #ffffff; flex: 1; padding: 20px 30px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; }
+
+        /* ==========================================================================
+           3. EL TRÉBOL DE 4 HOJAS ANIMADO (Ciclo de regeneración de hojas)
+           ========================================================================== */
+        .logo-container { display: flex; flex-direction: column; align-items: center; margin-bottom: 15px; }
+        
+        .clover-container {
+            position: relative; width: 80px; height: 75px; margin-bottom: 5px;
+        }
+
+        .clover-stem {
+            position: absolute; width: 4px; height: 22px; background: #1b733b;
+            bottom: 2px; left: 38px; border-radius: 0 0 4px 4px; transform: rotate(10deg); z-index: 1;
+        }
+
+        .clover-leaf {
+            position: absolute; width: 32px; height: 32px;
+            background: linear-gradient(135deg, #a8fbc0 0%, #2ecc71 45%, #1e8449 100%);
+            border-radius: 50% 50% 50% 0; box-shadow: inset -1px -1px 3px rgba(0,0,0,0.25), inset 1px 1px 4px rgba(255,255,255,0.7);
+        }
+
+        .leaf-top-left  { top: 5px; left: 24px; transform: rotate(-45deg); animation: cycleLeaf 4s infinite ease-in-out; }
+        .leaf-top-right { top: 21px; left: 38px; transform: rotate(45deg); animation: cycleLeaf 4s infinite ease-in-out 1s; }
+        .leaf-bot-right { top: 37px; left: 24px; transform: rotate(135deg); animation: cycleLeaf 4s infinite ease-in-out 2s; }
+        .leaf-bot-left  { top: 21px; left: 10px; transform: rotate(225deg); animation: cycleLeaf 4s infinite ease-in-out 3s; }
+
+        .clover-glass-shimmer {
+            position: absolute; top: 7px; left: 18px; width: 44px; height: 20px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 100%);
+            border-radius: 22px / 10px; pointer-events: none; z-index: 5;
+        }
+
+        @keyframes cycleLeaf {
+            0% { transform: scale(1) translate(0, 0) rotate(var(--rot, 0deg)); opacity: 1; }
+            30% { transform: scale(1.05) translate(0, 2px) rotate(calc(var(--rot, 0deg) + 5deg)); opacity: 1; }
+            55% { transform: scale(0.9) translate(0, 25px) rotate(calc(var(--rot, 0deg) + 40deg)); opacity: 0; }
+            75% { transform: scale(0) translate(0, 0) rotate(var(--rot, 0deg)); opacity: 0; }
+            90% { transform: scale(0.5) translate(0, 0) rotate(var(--rot, 0deg)); opacity: 0.5; }
+            100% { transform: scale(1) translate(0, 0) rotate(var(--rot, 0deg)); opacity: 1; }
+        }
+
+        /* ==========================================================================
+           4. FORMULARIO E INPUTS (Compresión de Márgenes)
+           ========================================================================== */
+        .logo-text { font-size: 26px; font-weight: bold; color: #144e28; margin: 0; letter-spacing: -0.5px; }
+        .logo-text span { color: #247cb8; font-weight: normal; }
+        .tagline { font-size: 11px; color: #617b94; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+        .field-group { margin-bottom: 14px; text-align: left; }
+        .field-group label { display: block; font-size: 11px; font-weight: bold; color: #34495e; margin-bottom: 4px; }
         .field-group input {
-            width: 100%; padding: 9px 12px; border: 1px solid #a3bccc; border-radius: 4px; box-sizing: border-box;
-            background: linear-gradient(180deg, #f9fbfd 0%, #ffffff 100%); font-size: 14px; color: #1d354d; outline: none; position: relative; z-index: 30;
+            width: 100%; padding: 8px 10px; border: 1px solid #a5bfc0; border-radius: 4px; box-sizing: border-box;
+            background: linear-gradient(180deg, #f7fafb 0%, #ffffff 100%); font-size: 13px; color: #2c3e50; outline: none;
         }
-        .btn-aero-capsule {
-            width: 100%; padding: 11px; font-size: 14px; font-weight: bold; color: white; border: 1px solid #1f5731; border-radius: 25px; cursor: pointer;
-            background: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 50%), linear-gradient(180deg, #4ce078 0%, #24a14a 49%, #0f8233 50%, #0a5c23 100%);
-            box-shadow: 0 4px 10px rgba(0,30,10,0.25), inset 0 1px 0 rgba(255,255,255,0.4); text-shadow: 0 -1px 1px rgba(0,0,0,0.4); position: relative; z-index: 30;
-        }
-        .feedback-msg { margin-top: 15px; font-size: 12px; text-align: center; min-height: 18px; font-weight: 600; }
-        .err { color: #be1e1e; } .ok { color: #177a2f; }
-        .arg-node { position: absolute; bottom: 12px; left: 15px; font-size: 11px; color: rgba(255,255,255,0.03); user-select: none; cursor: pointer; z-index: 40; }
-        .arg-node:hover { color: rgba(255,255,255,0.6); }
-        .browser-layout { width: 100%; height: 85vh; display: flex; flex-direction: column; }
-        .tabs-bar { background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.05) 100%); display: flex; align-items: flex-end; padding: 8px 10px 0 10px; gap: 4px; border-bottom: 1px solid rgba(0, 0, 0, 0.15); user-select: none; }
-        .tab { background: linear-gradient(180deg, rgba(240,245,250,0.7) 0%, rgba(215,225,235,0.7) 100%); border: 1px solid rgba(0,0,0,0.2); border-bottom: none; padding: 6px 15px; font-size: 12px; color: #2c4054; border-radius: 5px 5px 0 0; cursor: pointer; display: flex; align-items: center; gap: 10px; }
-        .tab.active { background: linear-gradient(180deg, #ffffff 0%, #f4f8fb 100%); color: #0b3a1a; font-weight: 600; border-color: rgba(0,0,0,0.25); position: relative; z-index: 2; margin-bottom: -1px; padding-bottom: 7px; }
-        .close-tab-btn { font-size: 10px; font-weight: bold; color: #8899aa; padding: 1px 4px; border-radius: 2px; }
-        .close-tab-btn:hover { background-color: #e81123; color: white; }
-        .navigation-bar { background: linear-gradient(180deg, #f4f8fb 0%, #e4eff7 100%); padding: 6px 12px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #b2c8db; }
-        .nav-btn { width: 24px; height: 24px; border-radius: 50%; border: 1px solid #9bb7d4; background: linear-gradient(180deg, #ffffff 0%, #e6eff7 100%); color: #55708c; display: flex; justify-content: center; align-items: center; }
-        .url-bar { flex: 1; padding: 5px 10px; border: 1px solid #a3bccc; border-radius: 4px; background: white; font-size: 13px; color: #3b5975; display: flex; align-items: center; gap: 6px; }
-        .url-secure-icon { color: #27ae60; font-size: 11px; font-weight: bold; }
-        .page-content { flex: 1; background: white; padding: 30px; overflow-y: auto; color: #203525; line-height: 1.6; }
-        .doc-title { color: #114d24; border-bottom: 2px solid #3fa1ec; padding-bottom: 6px; margin-top: 0; font-size: 24px; }
-        .meta-info { font-size: 12px; color: #667788; margin-bottom: 20px; background: #f4f8fb; padding: 8px 12px; border-radius: 4px; border: 1px solid #e1ebf2; }
-        .censored { background: #222; color: #222; padding: 0 4px; border-radius: 2px; cursor: help; transition: all 0.2s; user-select: none; }
-        .censored:hover { background: #c0392b; color: white; user-select: auto; }
-        
-        .wmp-player {
-            background: linear-gradient(180deg, #333 0%, #111 100%);
-            border: 2px solid #555; border-radius: 6px; padding: 15px;
-            color: #5cd682; font-family: monospace; max-width: 400px; margin: 20px 0;
-            box-shadow: inset 0 1px 3px rgba(255,255,255,0.2);
-        }
-        .wmp-display { background: black; border: 1px solid #444; height: 40px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; font-size: 12px; }
-    </style>
-</head>
-<body>
+        .field-group input:focus { border-color: #3fa1ec; box-shadow: 0 0 5px rgba(63,161,236,0.6); }
 
-    <div class="aero-window" id="mainContainer">
-        <div class="window-header">
-            <span id="windowTitle">CloverLabs_Intranet_Gate_v2.0</span>
-            <div class="window-controls">
-                <span></span><span></span><span></span>
-            </div>
-        </div>
-        
-        <div class="window-body login-padding" id="viewContent">
-            <div class="logo-container">
-                <!-- Logotipo Frutiger Aero Vectorial de 4 Hojas -->
-                <div class="clover-3d">
-                    <div class="leaf l1"></div>
-                    <div class="leaf l2"></div>
-                    <div class="leaf l3"></div>
-                    <div class="leaf l4"></div>
-                    <div class="stem"></div>
-                </div>
-                <h1 class="logo-text">Clover<span>Labs</span></h1>
-                <div class="tagline">Ecología Avanzada y Bioseguridad Global</div>
-            </div>
-            <form onsubmit="handlePortalLogin(event)">
-                <div class="field-group">
-                    <label for="scientistId">ID del Investigador:</label>
+        .btn-aero-capsule {
+            width: 100%; padding: 10px; font-size: 13px; font-weight: bold; color: white; border: 1px solid #194d27; border-radius: 20px; cursor: pointer;
+            background: linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 50%), linear-gradient(180deg, #4ce078 0%, #24a14a 49%, #0f8233 50%, #0a5c23 100%);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.4); text-shadow: 0 -1px 1px rgba(0,0,0,0.3);
+        }
+        .btn-aero-capsule:hover { filter: brightness(1.06); }
+
+        .feedback-msg { margin-top: 5px; font-size: 12px; text-align: center; min-height: 16px; font-weight: 600; }
+        .err { color: #c0392b; } .ok { color: #27ae60; }
+        .arg-node { position: absolute; bottom: 52px; left: 15px; font-size: 11px; color: rgba(255,255,255,0.03); user-select: none; cursor: pointer; z-index: 40; }
+        .arg-node:hover { color: rgba(255,255,255,0.5); }
+
+        /* ==========================================================================
+           5. INTERFAZ FASE 2: BROWSER DE PESTAÑAS (TABS AUTOMÁTICAS)
+           ========================================================================== */
+        .browser-layout { width: 100%; height: 100%; display: flex; flex-direction: column; background: #ffffff; }
+        .tabs-bar { background: linear-gradient(180deg, rgba(0,0,0,0.03) 0%, rgba(0,0,0,0.08) 100%); display: flex; align-items: flex-end; padding: 6px 10px 0 10px; gap: 3px; border-bottom: 1px solid rgba(0, 0, 0, 0.15); user-select: none; height: 35px; box-sizing: border-box; }
+        .tab { background: linear-gradient(180deg, rgba(240,245,250,0.7) 0%, rgba(215,225,235,0.7) 100%); border: 1px solid rgba(0,0,0,0.2); border-bottom: none; padding: 4px 12px; font-size: 11px; color: #34495e; border-radius: 4px 4px 0 0; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .tab.active { background: #ffffff; color: #144e28; font-weight: 600; border-color: rgba(0,0,0,0.2); position: relative; z-index: 2; margin-bottom: -1px; padding-bottom: 5px; }
+r:</label>
